@@ -1,0 +1,148 @@
+name: AWS - Deploy to Production via S3 + SSM
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write  # necessário para OIDC
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  S3_BUCKET: aldebara-bucket-s3
+  S3_PREFIX: external-deploy
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, ctype, fileinfo, openssl, pdo, mysql, tokenizer, xml, gd, sqlite
+          coverage: pcov
+
+      - name: Create Database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+
+      - name: Install Composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Run tests with coverage
+        run: |
+          php artisan test
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::211125754735:role/AldebaraGitHubActionsOIDCDeployRole
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get EC2 instance ID by tag
+        id: ec2
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:App,Values=Aldebara" "Name=tag:Env,Values=Production" "Name=instance-state-name,Values=running" \
+            --query 'Reservations[0].Instances[0].InstanceId' \
+            --output text)
+          echo "instance_id=$INSTANCE_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Create deployment package (ZIP)
+        run: |
+          zip -r package.zip . -x ".git/*" ".env" ".gitattributes" ".gitignore" ".github/*" ".env.exemple" "vendor/*" "node_modules/*" "storage/*" "tests/*" "coverage/*"
+
+      - name: Upload package to S3
+        run: |
+          aws s3 cp package.zip s3://${{ env.S3_BUCKET }}/${{ env.S3_PREFIX }}/package.zip
+
+      - name: Run Aldebara deploy commands via SSM (by tags)
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy Laravel via S3 + SSM" \
+            --targets \
+              "Key=tag:App,Values=Aldebara" \
+              "Key=tag:Env,Values=Production" \
+            --parameters '{
+              "commands": [
+                "echo \"=== Iniciando deploy ===\"",
+                "echo \"=== Configurando diretórios ===\"",
+                "sudo rm -rf /var/www/aldebara-app.old || true",
+                "sudo mv /var/www/aldebara-app /var/www/aldebara-app.old || true",
+                "sudo mkdir -p /var/www/aldebara-app",
+                "sudo chown -R ubuntu:ubuntu /var/www/aldebara-app",
+                "sudo chmod -R 755 /var/www/aldebara-app",
+                "cd /var/www/aldebara-app",
+
+                "echo \"=== Download do pacote ===\"",
+                "aws s3 cp s3://${{ env.S3_BUCKET }}/${{ env.S3_PREFIX }}/package.zip .",
+                "unzip -o package.zip",
+                "rm package.zip",
+
+                "echo \"=== Atualizando dependências Composer ===\"",
+                "sudo cp -r /var/www/aldebara-app.old/vendor /var/www/aldebara-app/",
+                "sudo chown -R ubuntu:ubuntu /var/www/aldebara-app/vendor",
+                "composer update --optimize-autoloader --no-dev --prefer-source",
+
+                "echo \"=== Atualizando dependências NPM ===\"",
+                "sudo cp -r /var/www/aldebara-app.old/node_modules /var/www/aldebara-app/",
+                "sudo chown -R ubuntu:ubuntu /var/www/aldebara-app/node_modules",
+                "npm ci",
+                "npm run build",
+
+                "echo \"=== Configuração final ===\"",
+                "sudo cp /var/www/aldebara-app.old/.env /var/www/aldebara-app/.env",
+                "sudo mkdir -p /var/www/aldebara-app/storage/framework/cache",
+                "sudo mkdir -p /var/www/aldebara-app/storage/framework/sessions",
+                "sudo mkdir -p /var/www/aldebara-app/storage/framework/views",
+                "php artisan key:generate",
+                "php artisan env",
+                "php artisan optimize",
+                "php artisan migrate --force",
+
+                "echo \"=== Reiniciando serviços ===\"",
+                "sudo chown -R www-data:www-data /var/www/aldebara-app",
+                "sudo chmod -R 775 /var/www/aldebara-app/storage /var/www/aldebara-app/bootstrap/cache",
+                "sudo systemctl restart php-fpm",
+
+                "echo \"✅ Deploy concluído com sucesso\""
+              ],
+              "executionTimeout": ["3600"]
+            }' \
+            --region ${{ env.AWS_REGION }}
