@@ -1,6 +1,8 @@
 # Notícias10
 
-Desenvolvido para tornar 
+O Noticias10 é uma aplicação web simples para gerenciamento e consulta de notícias organizadas por categorias.
+
+A plataforma resolve o problema de organização e busca eficiente de conteúdos, permitindo que usuários cadastrem notícias, classifiquem por categorias e realizem buscas rápidas por título ou categoria.
 
 ## 🚀 Começando
 

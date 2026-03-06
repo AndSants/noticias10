@@ -1,8 +1,8 @@
-<nav class="bg-gray-200 shadow fixed top-0 w-full z-50">
+<nav class="bg-cyan-500 shadow fixed top-0 w-full z-50 text-black">
     <div class="container mx-auto flex items-center justify-between py-4">
-        <div class="font-bold text-lg">
-            LOGO
-        </div>
+        <a href="{{ route('news.index') }}" class="flex items-center gap-2">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo Notícias 10" class="w-auto h-10">
+        </a>
 
         <div class="flex items-center gap-6">
             <a href="{{ route('news.create') }}" class="font-medium hover:text-blue-300">
