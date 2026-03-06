@@ -12,6 +12,11 @@
             <div class="mb-4">
                 <label class="block mb-1">Título</label>
                 <input type="text" name="title" class="border w-full px-3 py-2 rounded required autofocus">
+                @error('title')
+                    <p class="text-red-500 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <div class="mb-4">
@@ -28,11 +33,20 @@
             <div class="mb-4">
                 <label class="block mb-1">Conteúdo</label>
                 <textarea name="content" rows="5" class="border w-full px-3 py-2 rounded required"></textarea>
+                @error('content')
+                    <p class="text-red-500 text-sm mt-1">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
 
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Salvar
             </button>
+
+            <a href="{{ route('news.index') }}" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                Cancelar
+            </a>
         </form>
     </div>
 @endsection

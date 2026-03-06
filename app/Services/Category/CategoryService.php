@@ -32,6 +32,14 @@ class CategoryService
 
     public function delete(int $id)
     {
+        $category = $this->repository->find($id);
+
+        if ($category->news()->exists()) {
+            throw new \DomainException(
+                'Não é possível excluir esta categoria pois existem notícias vinculadas.'
+            );
+        }
+
         return $this->repository->delete($id);
     }
 

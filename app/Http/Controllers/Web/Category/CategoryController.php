@@ -71,16 +71,15 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $category = $this->service->delete($category->id);
-
-        if (!$category) {
+        try {
+            $this->service->delete($category->id);
             return redirect()
                 ->route('categories.index')
-                ->with('error', 'Erro ao deletar categoria');
+                ->with('success', 'Categoria excluida com sucesso');
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('categories.index')
+                ->with('error', $e->getMessage());
         }
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Categoria deletada com sucesso');
     }
 }
