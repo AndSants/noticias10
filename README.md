@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Notícias10
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Desenvolvido para tornar 
 
-## About Laravel
+## 🚀 Começando
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
+Esta aplicação em desenvolvimento utiliza Laravel Sail que é compatível com macOS, Linux e Windows (via WSL2).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📋 Pré-requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Antes de começar, verifique se você tem os seguintes pré-requisitos instalados:
 
-## Learning Laravel
+- [Docker](https://www.docker.com/get-started) (versão 23.00 ou superior)
+- [WSL2](https://learn.microsoft.com/en-us/windows/wsl/about) (para Windows)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 🔧 Instalação
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone o repositório**:     
 
-## Laravel Sponsors
+```
+git clone git@github.com:AndSants/noticias10.git
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Dependência do projeto**: 
 
-### Premium Partners
+Instale as dependências do aplicativo navegando até o diretório do aplicativo e executando o seguinte comando. 
+Este comando usa um pequeno contêiner Docker contendo PHP e Composer para instalar as dependências do aplicativo:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php85-composer:latest \
+    composer install --ignore-platform-reqs
+```
+3. **Configurando o .env**
 
-## Contributing
+Existe um arquivo de exemplo chamado '.env-exemple', você pode criar uma cópia dele para .env na raiz do projeto e configure as variáveis de ambiente
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Build do projeto**:  
 
-## Code of Conduct
+Finalmente, você pode iniciar o Sail.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+./vendor/bin/sail up -d
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run dev
+```
+> [!IMPORTANT]\
+> Caso esteja utilizando `CACHE_STORE=database` em suas configurações do .env, lembre-se de executar a migração (`php artisan migrate`) após o build do projeto.
 
-## Security Vulnerabilities
+## 😊 Pronto
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Até esse passo o sistema deverá está acessível em http://localhost, conto com você para evoluirmos juntos essa ferramenta incrível.
 
-## License
+## 📌 Versão
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Para as versões disponíveis, observe o [Changelog](https://github.com/AndSants/noticias10/blob/main/changelog.md). 
+
+## ✒️ Autores
+
+| Nome | Email |Linkedin |
+|-|-|-|
+| André Santos | <andresantos.iron@gmail.com> |[linkedin](https://www.linkedin.com/in/andresantostech/)|
+
+## 📄 Licença Privada
+
+### Definição
+
+Esta licença é uma licença privada e não open source. O uso do código-fonte deste projeto é restrito.
+
+### Termos de Uso
+
+- Para mais informações ligue 81 9 9704-4667
+
+### Proibições
+
+- É proibido o uso comercial deste código por terceiros sem autorização expressa.
+- A redistribuição do código-fonte ou partes dele é estritamente proibida.
+
+### Consequências da Violação
+
+Qualquer violação dos termos desta licença resultará em ações legais conforme necessário.
