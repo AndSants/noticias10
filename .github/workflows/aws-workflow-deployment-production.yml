@@ -79,6 +79,10 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Create testing database
+        run: |
+          PGPASSWORD=secret psql -h 127.0.0.1 -U laravel -c "CREATE DATABASE testing;"
+
       - name: Run tests
         run: |
           php artisan test
