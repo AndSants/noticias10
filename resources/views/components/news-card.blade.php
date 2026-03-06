@@ -18,7 +18,7 @@
     </div>
 
     <div class="mt-4">
-        <a href="#" class="bg-cyan-200 hover:bg-gray-300 px-4 py-2 rounded block text-center">
+        <a href="{{ route('news.show', $news->id) }}" class="bg-cyan-200 hover:bg-cyan-300 px-4 py-2 rounded block text-center">
             Acessar
         </a>
     </div>

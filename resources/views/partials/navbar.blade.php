@@ -18,14 +18,18 @@
             </a>
 
             <form action="{{ route('news.index') }}" method="GET">
-                <input 
-                    id="search"
-                    type="text"
-                    name="title"
-                    value="{{ request('title') }}"
-                    placeholder="Buscar por título"
-                    class="rounded-full px-4 py-2 border"
-                >
+                <div class="relative w-64">
+                    <i class="fi fi-br-search absolute left-3 top-1/2 -translate-y-1/2 text-black"></i>
+
+                    <input 
+                        id="search"
+                        type="text"
+                        name="title"
+                        value="{{ request('title') }}"
+                        placeholder="Buscar notícias..."
+                        class="w-full rounded-full pl-10 pr-4 py-2 bg-cyan-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
             </form>
         </div>
     </div>

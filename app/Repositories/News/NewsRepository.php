@@ -27,4 +27,9 @@ class NewsRepository
             ->paginate(12)
             ->withQueryString();
     }
+
+    public function findById(int $id)
+    {
+        return News::with('category')->findOrFail($id);
+    }
 }

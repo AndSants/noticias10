@@ -19,4 +19,9 @@ class NewsService
     {
         return $this->repository->search($title, $category);
     }
+
+    public function findById(int $id)
+    {
+        return $this->repository->findById($id);
+    }
 }
