@@ -5,16 +5,27 @@
         </div>
 
         <div class="flex items-center gap-6">
-            <a href="{{ route('news.create') }}" class="font-medium">
+            <a href="{{ route('news.create') }}" class="font-medium hover:text-blue-300">
                 Cadastrar Notícias
             </a>
 
-            <a href="{{ route('news.index') }}" class="font-medium">
+            <a href="{{ route('news.index') }}" class="font-medium hover:text-blue-300">
                 Exibir Notícias
             </a>
 
+            <a href="{{ route('categories.index') }}" class="font-medium hover:text-blue-300">
+                Gerenciar Categorias
+            </a>
+
             <form action="{{ route('news.index') }}" method="GET">
-                <input id="search" type="text" name="title" value="{{ request('title') }}" placeholder="Buscar por título" class="rounded-full px-4 py-2 border">
+                <input 
+                    id="search"
+                    type="text"
+                    name="title"
+                    value="{{ request('title') }}"
+                    placeholder="Buscar por título"
+                    class="rounded-full px-4 py-2 border"
+                >
             </form>
         </div>
     </div>

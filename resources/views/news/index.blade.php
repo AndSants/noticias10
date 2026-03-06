@@ -3,7 +3,7 @@
 @section('content')
     <div class="mb-6">
         <form method="GET" class="flex gap-4">
-            <input type="text" name="title" placeholder="Buscar por título" class="border px-3 py-2 rounded">
+            <input type="text" name="title" placeholder="Buscar por título" class="border px-3 py-2 rounded" value="{{ request('title') }}">
 
             <select name="category" class="border px-3 py-2 rounded">
                 <option value="">Todas as Categoria</option>
