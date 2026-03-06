@@ -11,7 +11,7 @@
 
             <div class="mb-4">
                 <label class="block mb-1">Título</label>
-                <input type="text" name="title" class="border w-full px-3 py-2 rounded">
+                <input type="text" name="title" class="border w-full px-3 py-2 rounded required autofocus">
             </div>
 
             <div class="mb-4">
@@ -27,10 +27,10 @@
 
             <div class="mb-4">
                 <label class="block mb-1">Conteúdo</label>
-                <textarea name="content" rows="5" class="border w-full px-3 py-2 rounded"></textarea>
+                <textarea name="content" rows="5" class="border w-full px-3 py-2 rounded required"></textarea>
             </div>
 
-            <button class="bg-blue-500 text-white px-4 py-2 rounded">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Salvar
             </button>
         </form>

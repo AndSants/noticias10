@@ -23,7 +23,7 @@ class NewsController extends Controller
             $request->category
         );
 
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get();
 
         return view('news.index', compact(
             'news',
@@ -33,14 +33,23 @@ class NewsController extends Controller
 
     public function create()
     {
-        //
+        $categories = Category::orderBy('name')->get();
+
+        return view('news.create', compact('categories'));
     }
 
     public function store(StoreNewsRequest $request)
     {
-        $this->service->create($request->validated());
+        $news = $this->service->create($request->validated());
 
-        return redirect()->back()
+        if (!$news) {
+            return redirect()
+                ->route('news.index')
+                ->with('error', 'Erro ao criar noticia');
+        }
+
+        return redirect()
+            ->route('news.index')
             ->with('success', 'Notícia criada com sucesso');
     }
 
