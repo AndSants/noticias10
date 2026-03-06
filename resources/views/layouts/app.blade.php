@@ -24,7 +24,7 @@
 
     @include('partials.navbar')
 
-    <main class="container mx-auto py-10 flex-1">
+    <main class="container mx-auto pt-24 pb-10 flex-1">
 
         @yield('content')
 
