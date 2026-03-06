@@ -13,14 +13,18 @@ class NewsRepository
 
     public function search($title = null, $category = null)
     {
-        return News::with('category')
-            ->when($title, fn ($q) =>
-                $q->where('title', 'like', "%{$title}%")
-            )
-            ->when($category, fn ($q) =>
-                $q->where('category_id', $category)
-            )
-            ->latest()
-            ->paginate(10);
+        $query = News::query()->with('category');
+
+            if ($title) {
+                $query->where('title', 'LIKE', "%{$title}%");
+            }
+
+            if ($category) {
+                $query->where('category_id', $category);
+            }
+        
+        return $query->latest()
+            ->paginate(12)
+            ->withQueryString();
     }
 }
