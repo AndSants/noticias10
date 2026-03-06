@@ -57,7 +57,7 @@ jobs:
           node-version: 20
 
       - name: Install NPM dependencies
-        run: npm install
+        run: npm install && npm run build
 
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
