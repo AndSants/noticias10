@@ -144,14 +144,18 @@ jobs:
                 "rm package.zip",
 
                 "echo \"=== Atualizando dependências Composer ===\"",
+                "sudo cp -r /var/www/aldebara-app.old/vendor /var/www/aldebara-app/",
+                "sudo chown -R ubuntu:ubuntu /var/www/aldebara-app/vendor",
                 "composer update --optimize-autoloader --no-dev --prefer-source",
 
                 "echo \"=== Atualizando dependências NPM ===\"",
-                "npm install",
+                "sudo cp -r /var/www/aldebara-app.old/node_modules /var/www/aldebara-app/",
+                "sudo chown -R ubuntu:ubuntu /var/www/aldebara-app/node_modules",
+                "npm ci",
                 "npm run build",
 
                 "echo \"=== Configuração final ===\"",
-                "sudo cp /var/www/aldebara-app/.env.exemple /var/www/aldebara-app/.env",
+                "sudo cp /var/www/aldebara-app.old/.env /var/www/aldebara-app/.env",
                 "sudo mkdir -p /var/www/aldebara-app/storage/framework/cache",
                 "sudo mkdir -p /var/www/aldebara-app/storage/framework/sessions",
                 "sudo mkdir -p /var/www/aldebara-app/storage/framework/views",
