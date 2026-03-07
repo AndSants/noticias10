@@ -144,7 +144,7 @@ jobs:
                 "rm package.zip",
 
                 "echo \"=== Atualizando dependências Composer ===\"",
-                "composer install --no-interaction --optimize-autoloader --no-dev --prefer-source",
+                "composer update --optimize-autoloader --no-dev --prefer-source",
 
                 "echo \"=== Atualizando dependências NPM ===\"",
                 "npm install",
